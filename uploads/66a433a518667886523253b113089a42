@@ -1,0 +1,20 @@
+import http.server
+import socketserver
+
+PORT = 8080
+
+class SimpleHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        # The simple message you will see in your browser
+        self.wfile.write(b"<h1>Success! Your e2-micro server is working perfectly!</h1>")
+
+# This allows the server to restart instantly if it crashes
+socketserver.TCPServer.allow_reuse_address = True
+
+with socketserver.TCPServer(("", PORT), SimpleHandler) as httpd:
+    print(f"Test server running! Open: http://YOUR_EXTERNAL_IP:{PORT}")
+    httpd.serve_forever()
+
